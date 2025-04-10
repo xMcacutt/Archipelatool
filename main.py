@@ -2,14 +2,17 @@
 
 from app_colors import AppColors
 from aptool_views.clients_screen import clients_screen
+from aptool_views.yamls_screen import yamls_screen
 from aptool_views.home_screen import home_screen
 
 
 def main(page: ft.Page):
-    page.title = "Archipelago Manager"
+    page.title = "Archipelatool"
     page.bgcolor = AppColors.mainBack
     page.window.width = 1000
+    page.window.min_width = 500
     page.window.height = 700
+    page.window.min_height = 400
 
     def route_change(e):
         page.views.clear()
@@ -17,6 +20,8 @@ def main(page: ft.Page):
             page.views.append(home_screen(page))
         elif page.route == "/clients":
             page.views.append(clients_screen(page))
+        elif page.route == "/yamls":
+            page.views.append(yamls_screen(page))
         page.update()
 
     def view_pop(e):
@@ -32,4 +37,5 @@ def main(page: ft.Page):
     page.go(page.route)
 
 
-ft.app(target=main)
+if __name__ == "__main__":
+    ft.app(target=main, view=ft.AppView.WEB_BROWSER)
