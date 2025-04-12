@@ -14,12 +14,12 @@ def home_screen(page: ft.Page):
     ]
 
     colors = [
+        AppColors.yellow,
         AppColors.red,
         AppColors.green,
-        AppColors.pink,
-        AppColors.orange,
         AppColors.blue,
-        AppColors.yellow,
+        AppColors.orange,
+        AppColors.pink,
     ]
 
     grid_items = []
@@ -27,16 +27,18 @@ def home_screen(page: ft.Page):
         grid_items.append(
             ft.Container(
                 bgcolor=colors[i],
-                border_radius=10,
+                border_radius=50,
+                expand=True,
                 padding=20,
                 content=ft.GestureDetector(
                     on_tap=lambda e, route=item['route']: page.go(f"/{route}"),
                     content=ft.Column(
                         alignment=ft.MainAxisAlignment.CENTER,
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        expand=True,
                         controls=[
-                            ft.Icon(item["icon"], size=40, color=AppColors.mainBack),
-                            ft.Text(item["title"], size=16, color=AppColors.mainBack)
+                            ft.Icon(item["icon"], size=50, color=AppColors.mainBack),
+                            ft.Text(item["title"], size=18, color=AppColors.mainBack)
                         ]
                     )
                 )
@@ -52,6 +54,7 @@ def home_screen(page: ft.Page):
                         expand=True,
                         runs_count=3,
                         spacing=30,
+                        padding=20,
                         run_spacing=30,
                         controls=grid_items
                     )

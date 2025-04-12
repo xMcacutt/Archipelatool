@@ -16,9 +16,9 @@ class Client:
 def clients_screen(page: ft.Page, client_list=None):
     page.theme = ft.Theme(
         color_scheme=ft.ColorScheme(
-            primary=AppColors.red,
-            primary_container=AppColors.red,
-            secondary=AppColors.red,
+            primary=AppColors.yellow,
+            primary_container=AppColors.yellow,
+            secondary=AppColors.yellow,
             background=AppColors.mainBack,
             surface=AppColors.altBack,
             on_primary=AppColors.mainBack,
@@ -45,9 +45,9 @@ def clients_screen(page: ft.Page, client_list=None):
         border_color=AppColors.specialBack,
         bgcolor=AppColors.altBack,
         color=AppColors.mainText,
-        cursor_color=AppColors.red,
-        selection_color=AppColors.red,
-        label_style=ft.TextStyle(color=AppColors.red),
+        cursor_color=AppColors.yellow,
+        selection_color=AppColors.yellow,
+        label_style=ft.TextStyle(color=AppColors.yellow),
         on_change=lambda e: update_client_list(),
         expand=False,
     )
@@ -64,12 +64,12 @@ def clients_screen(page: ft.Page, client_list=None):
 
     def update_client_list():
         search_text = search_field.value.lower()
-        filtered_clients = [
+        filteyellow_clients = [
             client for client in client_list
             if search_text in client.name.lower()
         ]
         sorted_clients = sorted(
-            filtered_clients,
+            filteyellow_clients,
             key=lambda c: (not c.is_favorite, c.name.lower())
         )
         client_column.controls.clear()
@@ -101,7 +101,7 @@ def clients_screen(page: ft.Page, client_list=None):
                     ],
                     vertical_alignment=ft.CrossAxisAlignment.CENTER,
                 ),
-                bgcolor=AppColors.red,
+                bgcolor=AppColors.yellow,
                 leading=ft.IconButton(
                     icon=ft.Icons.ARROW_BACK,
                     icon_color=AppColors.mainBack,

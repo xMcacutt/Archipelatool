@@ -30,10 +30,10 @@ world_templates = {
 def yamls_screen(page: ft.Page):
     page.theme = ft.Theme(
         color_scheme=ft.ColorScheme(
-            primary=AppColors.orange,
+            primary=AppColors.blue,
             primary_container=AppColors.specialBack,
             surface_container=AppColors.specialBack,
-            secondary=AppColors.orange,
+            secondary=AppColors.blue,
             background=AppColors.mainBack,
             surface=AppColors.altBack,
             on_primary=AppColors.mainBack,
@@ -65,7 +65,7 @@ def yamls_screen(page: ft.Page):
                                 border_radius=10,
                                 border_width=1.2,
                                 bgcolor=AppColors.altBack,
-                                border_color=AppColors.orange,
+                                border_color=AppColors.blue,
                                 expand=True
                             ),
                             ft.Dropdown(
@@ -73,7 +73,7 @@ def yamls_screen(page: ft.Page):
                                 border_radius=10,
                                 border_width=1.2,
                                 bgcolor=AppColors.altBack,
-                                border_color=AppColors.orange,
+                                border_color=AppColors.blue,
                                 filled=True,
                                 options=[ft.dropdown.Option(opt) for opt in ["full", "minimal"]],
                                 value="full",
@@ -127,7 +127,7 @@ def yamls_screen(page: ft.Page):
                     border_width=1.2,
                     bgcolor=AppColors.altBack,
                     filled=True,
-                    border_color=AppColors.orange,
+                    border_color=AppColors.blue,
                     options=[ft.dropdown.Option(opt) for opt in setting["options"]],
                     value=setting.get("default", setting["options"][0]),
                     label=key.replace("_", " ").title()
@@ -173,7 +173,7 @@ def yamls_screen(page: ft.Page):
                     ],
                     vertical_alignment=ft.CrossAxisAlignment.CENTER,
                 ),
-                bgcolor=AppColors.orange,
+                bgcolor=AppColors.blue,
                 leading=ft.IconButton(
                     icon=ft.Icons.ARROW_BACK,
                     icon_color=AppColors.mainBack,

@@ -2,17 +2,21 @@
 
 from app_colors import AppColors
 from aptool_views.clients_screen import clients_screen
+from aptool_views.games_screen import games_screen
+from aptool_views.links_screen import links_screen
+from aptool_views.worlds_screen import worlds_screen
 from aptool_views.yamls_screen import yamls_screen
 from aptool_views.home_screen import home_screen
+from aptool_views.generate_and_host_screen import generate_and_host_screen
 
 
 def main(page: ft.Page):
     page.title = "Archipelatool"
     page.bgcolor = AppColors.mainBack
-    page.window.width = 1000
-    page.window.min_width = 500
-    page.window.height = 700
-    page.window.min_height = 400
+    page.window.width = 1050
+    page.window.min_width = 700
+    page.window.height = 750
+    page.window.min_height = 500
 
     def route_change(e):
         page.views.clear()
@@ -20,8 +24,16 @@ def main(page: ft.Page):
             page.views.append(home_screen(page))
         elif page.route == "/clients":
             page.views.append(clients_screen(page))
+        elif page.route == "/generate":
+            page.views.append(generate_and_host_screen(page))
+        elif page.route == "/worlds":
+            page.views.append(worlds_screen(page))
         elif page.route == "/yamls":
             page.views.append(yamls_screen(page))
+        elif page.route == "/games":
+            page.views.append(games_screen(page))
+        elif page.route == "/links":
+            page.views.append(links_screen(page))
         page.update()
 
     def view_pop(e):
