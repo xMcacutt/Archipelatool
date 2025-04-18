@@ -57,6 +57,6 @@ deserialized making it much easier to modify the release mode, hint cost, etcete
 ## Contributing
 
 To contribute to this project simply clone, make changes, and pull request. You can also contact me in the [Archipelago Discord's 
-Archipelatool thread]() to register your interest and discuss what needs completing.
+Archipelatool thread](https://discordapp.com/channels/731205301247803413/1362669968042491974) to register your interest and discuss what needs completing.
 
 ![Links View](images/Links.png)
