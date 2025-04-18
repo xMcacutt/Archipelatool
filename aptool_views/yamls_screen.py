@@ -150,7 +150,7 @@ def yamls_screen(page: ft.Page):
         )
 
     left_drawer = ft.Container(
-        bgcolor=ft.colors.SURFACE_VARIANT,
+        bgcolor=ft.Colors.SURFACE,
         padding=20,
         width=250,
         content=ft.Column(

@@ -4,7 +4,10 @@ from datetime import datetime
 import random
 
 from app_colors import AppColors
+from controls.APDropdown import APDropdown
+from controls.APTextField import APTextField
 
+dummy_yamls = ["AMattInTime.yaml", "SuperMattioWorld.yaml", "Mattenger.yaml", "Mattcraft.yaml", "Mattctorio.yaml", "MegaMatt2.yaml", "SonicAdventure2Mattle.yaml"]
 
 def generate_and_host_screen(page: ft.Page):
     page.theme = ft.Theme(
@@ -22,18 +25,47 @@ def generate_and_host_screen(page: ft.Page):
             bgcolor=AppColors.red,
             foreground_color=AppColors.mainBack,
         ),
+        radio_theme=ft.RadioTheme(
+            fill_color=AppColors.red
+        ),
         divider_color=AppColors.specialBack,
         font_family="Roboto",
         use_material3=True,
     )
+    page.controls.clear()
+    page.update()
 
-    # Folder mode switch
     folder_mode = ft.RadioGroup(
         content=ft.Row([
             ft.Radio(value="temp", label="Use temporary folder"),
             ft.Radio(value="existing", label="Use existing folder"),
         ]),
         value="temp",
+    )
+
+    output_mode = ft.RadioGroup(
+        content=ft.Row([
+            ft.Radio(value="recent", label="Use most recent"),
+            ft.Radio(value="selected", label="Select output file"),
+        ]),
+        value="recent",
+    )
+
+    output_input = ft.Row(
+        visible=False,
+        controls=[
+            ft.TextField(
+                label="Select file...",
+                expand=True,
+                color=AppColors.mainText,
+                bgcolor=AppColors.altBack,
+                suffix=ft.ElevatedButton(
+                    on_click=lambda e: print("Browse for output file..."),
+                    text="Browse",
+                    style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5))
+                )
+            ),
+        ]
     )
 
     folder_input = ft.Row(
@@ -53,6 +85,42 @@ def generate_and_host_screen(page: ft.Page):
         ]
     )
 
+    yaml_files_column = ft.Column(scroll=ft.ScrollMode.ALWAYS, expand=True)
+
+    def edit_yaml(yaml_name):
+        pass
+
+    def delete_yaml(yaml_name):
+        pass
+
+    def test_yaml(yaml_name):
+        pass
+
+    def update_yaml_list():
+        yaml_files_column.controls.clear()
+        for yaml_name in dummy_yamls:
+            yaml_files_column.controls.append(
+                ft.ListTile(
+                    height=35,
+                    leading=ft.IconButton(
+                        icon=ft.Icons.DELETE_ROUNDED,
+                        on_click=partial(lambda y, e: delete_yaml(y), yaml_name)
+                    ),
+                    title=ft.Text(yaml_name),
+                    trailing=ft.Row(controls=[
+                        ft.IconButton(
+                            icon=ft.Icons.EDIT_ROUNDED,
+                            on_click=partial(lambda y, e: edit_yaml(y), yaml_name)
+                        ),
+                        ft.IconButton(
+                            icon=ft.Icons.SCIENCE_ROUNDED,
+                            on_click=partial(lambda y, e: test_yaml(y), yaml_name)
+                        ),
+                    ], tight=True)
+                )
+            )
+        page.update()
+
     def toggle_folder_mode(e):
         if folder_mode.value == "existing":
             folder_input.visible = True
@@ -60,70 +128,68 @@ def generate_and_host_screen(page: ft.Page):
             folder_input.visible = False
         page.update()
 
+    def toggle_output_mode(e):
+        if output_mode.value == "selected":
+            output_input.visible = True
+        else:
+            output_input.visible = False
+        page.update()
+
     folder_mode.on_change = toggle_folder_mode
+    output_mode.on_change = toggle_output_mode
+    toggle_folder_mode(None)
+    toggle_output_mode(None)
 
-    # Simulated YAML files
-    yaml_files_column = ft.Column([
-        ft.Text(f"config_{i}.yaml", color=AppColors.mainText)
-        for i in range(3)
-    ], scroll=ft.ScrollMode.AUTO)
-
-    drag_target = ft.Container(
-        content=ft.Text("Drag files here", color=AppColors.mainText),
-        bgcolor=AppColors.specialBack,
-        height=100,
-        border_radius=10,
-        alignment=ft.alignment.center,
-    )
+    update_yaml_list()
 
     generate_button = ft.ElevatedButton(
         text="Generate",
         on_click=lambda e: print("Generating..."),
-        bgcolor=AppColors.red,
-        color=AppColors.mainBack
+        width=150,
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5))
     )
 
-    # Dummy generated output list
-    dummy_outputs = [
-        {
-            "name": f"output_{i}.yaml",
-            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        }
-        for i in range(5)
-    ]
-
-    selected_output = ft.Ref[ft.RadioGroup]()
-
-    outputs_radio_group = ft.RadioGroup(
-        ref=selected_output,
-        content=ft.Column([
-            ft.Radio(value=o["name"], label=f"{o['name']} ({o['timestamp']})", fill_color=AppColors.red)
-            for o in dummy_outputs
-        ])
+    open_folder_button = ft.ElevatedButton(
+        text="Open Folder",
+        on_click=lambda e: print("Select a folder..."),
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5))
     )
 
-    # Host buttons
-    local_host_button = ft.ElevatedButton(text="Local Host", disabled=True)
-    web_host_button = ft.ElevatedButton(text="Web Host", disabled=True)
+    local_host_button = ft.ElevatedButton(text="Local Host", disabled=True, style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5)), width=150)
+    web_host_button = ft.ElevatedButton(text="Web Host", disabled=True, style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5)), width=150)
 
     def update_host_buttons(e):
-        is_selected = selected_output.current.value is not None
+        is_selected = True
         local_host_button.disabled = not is_selected
         web_host_button.disabled = not is_selected
         page.update()
 
-    outputs_radio_group.on_change = update_host_buttons
-
-    # Host settings
     host_settings = ft.Column([
-        ft.TextField(label="Hint cost (%)", width=200),
-        ft.Dropdown(label="Release mode", options=[ft.dropdown.Option(opt) for opt in
-                                                   ["disabled", "enabled", "auto", "auto-enabled", "goal"]]),
-        ft.Dropdown(label="Collect mode", options=[ft.dropdown.Option(opt) for opt in
-                                                   ["disabled", "enabled", "auto", "auto-enabled", "goal"]]),
-        ft.Dropdown(label="Remaining mode",
-                    options=[ft.dropdown.Option(opt) for opt in ["disabled", "enabled", "goal"]]),
-        ft.TextField(label="Auto shutdown (seconds)", width=200),
+        ft.Container(
+            ft.Row(controls=[
+                APTextField(label="Hint cost (%)", color=AppColors.red, width=200),
+                APDropdown(
+                    label="Release mode",
+                    options=[ft.dropdown.Option(opt) for opt in ["disabled", "enabled", "auto", "auto-enabled", "goal"]],
+                    value="goal",
+                    color=AppColors.red
+                ),
+                APDropdown(
+                    label="Collect mode",
+                    options=[ft.dropdown.Option(opt) for opt in ["disabled", "enabled", "auto", "auto-enabled", "goal"]],
+                    value="goal",
+                    color=AppColors.red
+                ),
+                APDropdown(
+                    label="Remaining mode",
+                    options=[ft.dropdown.Option(opt) for opt in ["disabled", "enabled", "goal"]],
+                    value="goal",
+                    color=AppColors.red
+                ),
+                APTextField(label="Auto shutdown (seconds)", color=AppColors.red, width=200),
+            ]),
+            padding=10
+        )
     ], spacing=10)
 
     return ft.View(
@@ -147,27 +213,66 @@ def generate_and_host_screen(page: ft.Page):
             ft.Container(content=
                 ft.Column(controls=[
                     ft.ExpansionTile(controls=[
-                        ft.Container(content=folder_mode, padding=ft.padding.only(top=10, bottom=10)),
-                        folder_input,
+                        ft.Column(controls=[
+                            host_settings,
+                        ]),
+                    ], title=ft.Text("Settings"), initially_expanded=False),
+                    ft.ExpansionTile(controls=[
+                        ft.Column(controls=[
+                            ft.Container(content=folder_mode, padding=ft.padding.only(top=10)),
+                            folder_input,
+                            open_folder_button,
+                        ]),
                         ft.Divider(),
-                        ft.Row([
-                            ft.ElevatedButton(text="Open Folder", on_click=lambda e: print("Open folder in explorer")),
-                            drag_target
-                        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+
                         ft.Text("YAML Files", size=16, color=AppColors.mainText),
-                        yaml_files_column,
-                        generate_button,
+                        ft.Container(
+                            ft.Column(controls=[
+                                ft.Container(
+                                    content=yaml_files_column,
+                                    bgcolor=AppColors.altBack,
+                                    height=300,
+                                    border_radius=10,
+                                    padding=ft.padding.only(top=10, bottom=10),
+                                ),
+                                ft.Container(
+                                    ft.Row(
+                                        controls=[
+                                            ft.Text("Total: " + str(len(dummy_yamls))),
+                                            generate_button,
+                                        ],
+                                        alignment=ft.MainAxisAlignment.END
+                                    ),
+                                    alignment=ft.alignment.center_right,
+                                    padding=10,
+                                )
+                            ]),
+                            padding=10
+                        )
                     ], title=ft.Text("Generate"), initially_expanded=True),
                     ft.ExpansionTile(controls=[
-                        host_settings,
-                        ft.Text("Generated Outputs", size=16, color=AppColors.mainText),
-                        outputs_radio_group,
-                        ft.Row([local_host_button, web_host_button], spacing=10),
+                        ft.Container(content=
+                            ft.Column(controls=[
+                                output_mode,
+                                output_input,
+                                ft.Container(
+                                    ft.Row(
+                                        controls=[local_host_button, web_host_button],
+                                        spacing=10,
+                                        alignment=ft.MainAxisAlignment.CENTER
+                                    ),
+                                    alignment=ft.alignment.center,
+                                    padding=10,
+                                )
+                            ]),
+                            padding=10
+                        )
                     ], title=ft.Text("Host")),
                 ]),
                 padding=10
             )
         ],
+        scroll=ft.ScrollMode.AUTO,
         bgcolor=AppColors.mainBack
     )
 

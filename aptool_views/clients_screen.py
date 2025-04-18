@@ -6,7 +6,7 @@ from app_colors import AppColors
 
 # Sample client data structure
 class Client:
-    def __init__(self, name, description=None, icon_path: str = "./assets/icon.ico"):
+    def __init__(self, name, description=None, icon_path: str = "./assets/favicon.ico"):
         self.name = name
         self.description = description
         self.icon = icon_path
